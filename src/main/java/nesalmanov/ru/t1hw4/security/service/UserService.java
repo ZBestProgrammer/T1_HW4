@@ -3,6 +3,7 @@ package nesalmanov.ru.t1hw4.security.service;
 import nesalmanov.ru.t1hw4.security.entity.User;
 import nesalmanov.ru.t1hw4.security.entity.request.UserLoginRequest;
 import nesalmanov.ru.t1hw4.security.entity.request.UserRegisterRequest;
+import nesalmanov.ru.t1hw4.security.entity.respone.TokenResponse;
 import nesalmanov.ru.t1hw4.security.jwt.JWTService;
 import nesalmanov.ru.t1hw4.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,19 +36,21 @@ public class UserService {
         newUser.setEmail(userRegisterRequest.getEmail());
         newUser.setRole(userRegisterRequest.getRole());
 
-        User addUser = userRepository.save(newUser);
-
-        return addUser;
+        return userRepository.save(newUser);
     }
 
-    public String verify(UserLoginRequest userLoginRequest) {
+    public TokenResponse verify(UserLoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userLoginRequest.getUsername(), userLoginRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
         );
 
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(userLoginRequest);
+            String username = loginRequest.getUsername();
+            String accessToken = jwtService.generateAccessToken(username);
+            String refreshToken = jwtService.generateRefreshToken(username);
+            return new TokenResponse(accessToken, refreshToken);
         }
-        return "Bad credentials";
+        throw new RuntimeException("Bad credentials");
     }
+
 }

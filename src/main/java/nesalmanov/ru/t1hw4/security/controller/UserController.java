@@ -4,6 +4,7 @@ package nesalmanov.ru.t1hw4.security.controller;
 import nesalmanov.ru.t1hw4.security.entity.User;
 import nesalmanov.ru.t1hw4.security.entity.request.UserLoginRequest;
 import nesalmanov.ru.t1hw4.security.entity.request.UserRegisterRequest;
+import nesalmanov.ru.t1hw4.security.entity.respone.TokenResponse;
 import nesalmanov.ru.t1hw4.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestBody UserLoginRequest userLoginRequest) {
+    public TokenResponse loginUser(@RequestBody UserLoginRequest userLoginRequest) {
         return userService.verify(userLoginRequest);
     }
 

@@ -33,7 +33,7 @@ public class SpringSecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/register", "/api/login").permitAll()
+                        .requestMatchers("/api/register", "/api/login", "/api/auth/refresh").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/premium_user").hasRole("PREMIUM_USER")
                         .requestMatchers("/guest").hasRole("GUEST")
